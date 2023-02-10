@@ -7,8 +7,12 @@ import com.example.login_demo.common.ResponseEnum;
 import com.example.login_demo.enums.UserEnum;
 import com.example.login_demo.pojo.User;
 import com.example.login_demo.service.LoginService;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -21,70 +25,93 @@ public class LoginController {
         this.loginService = loginService;
     }
 
-    @GetMapping("/login")
-    public ResponseData<Object> loginGate(String username, String password) {
+    @PostMapping("/login")
+    public ResponseData<Object> loginGate(@RequestBody MultiValueMap<String, String> params) {
         try {
-            String response = loginService.findUser(username, password);
-            return ResponseData.Success("success", response);
-        } catch (BizException e) {
-            return ResponseData.Create(e);
-        }
-    }
-
-    @AuthHandle(value = {UserEnum.Admin})
-    @PutMapping("/updateLoginInfo/createNewUser")
-    public ResponseData<Object> uploadUser(@RequestBody User user) {
-        if (user.getUsername().equals("") || user.getPassword().equals(zeroInSha256)) {
-            return ResponseData.Error("用户名或密码错误");
-        }
-        String response = null;
-        try {
-            response = loginService.addUser(user);
-        } catch (BizException e) {
-            return ResponseData.Create(e);
-        }
-        return ResponseData.Success(response);
-    }
-
-    @PutMapping("/updateLoginInfo/changePassword")
-    public ResponseData<Object> changePassword(@RequestHeader("Token") String token, String password, String newPassword) {
-        if (newPassword.equals(zeroInSha256)) {
-            return ResponseData.Error("请输入新密码");
-        }
-        String tokenHead = "token_";
-        String username = loginService.findUsernameByToken(tokenHead + token);
-        if (loginGateWithoutReturnToken(username, password)) {
-            String response = null;
-            try {
-                response = loginService.changeUserPassword(username, newPassword);
-            } catch (BizException e) {
-                return ResponseData.Create(e);
-            }
+            User response = loginService.findUser(params.get("userName").get(0), params.get("password").get(0));
             return ResponseData.Success(response);
+        } catch (BizException e) {
+            return ResponseData.Create(e);
         }
-        return ResponseData.Error("密码错误");
     }
 
-    private boolean loginGateWithoutReturnToken(String username, String userPassword) {
-        return loginService.checkPassword(username, userPassword);
+    @AuthHandle(value = {UserEnum.User, UserEnum.Admin})
+    @PostMapping("/user/register")
+    public ResponseData<Object> uploadUser(HttpServletRequest request) {
+        MultipartHttpServletRequest params = ((MultipartHttpServletRequest) request);
+        String userName = params.getParameter("userName");
+        String password = params.getParameter("password");
+        String email = params.getParameter("email");
+        User user = new User(userName, password, email);
+        if (user.getUserName().equals("") || user.getPassword().equals(zeroInSha256)) {
+            return ResponseData.Error("用户名或密码不能为空");
+        }
+        try {
+            String response = loginService.addUser(user);
+            return ResponseData.Success(response);
+        } catch (BizException e) {
+            return ResponseData.Create(e);
+        }
+    }
+
+    @AuthHandle(value = {UserEnum.User, UserEnum.Admin})
+    @GetMapping("/user/info")
+    public ResponseData<Object> getMyInfo(@RequestHeader("Token") String token) {
+        User user = new User();
+        try {
+            user.setUserName(loginService.findUsernameByToken(token));
+            return ResponseData.Success(user);
+        } catch (Exception e) {
+            return ResponseData.Create(new BizException(ResponseEnum.UNEXPECTED));
+        }
+    }
+
+    @AuthHandle(value = {UserEnum.User, UserEnum.Admin})
+    @PostMapping("/user/edit_info")
+    public ResponseData<Object> changeInfo(@RequestHeader("Token") String token,
+                                           HttpServletRequest request) {
+        try {
+            MultipartHttpServletRequest params = ((MultipartHttpServletRequest) request);
+            String userName = params.getParameter("userName");
+            String password = params.getParameter("password");
+            String email = params.getParameter("email");
+            User user = new User(userName, password, email);
+            String response = loginService.changeUserInfo(user, token);
+            return ResponseData.Success(response);
+        } catch (BizException e) {
+            return ResponseData.Create(e);
+        }
     }
 
     @AuthHandle(value = {UserEnum.Admin})
-    @GetMapping("/getAllUserInfo")
+    @GetMapping("/admin/show_all")
     public ResponseData<Object> getAllUserInfo() {
         try {
             List<User> users = loginService.findAllUser();
-            return ResponseData.Success("Success", users);
+            return ResponseData.Success(users);
         } catch (Exception e) {
             return ResponseData.Create(new BizException(ResponseEnum.UNEXPECTED));
         }
     }
 
     @AuthHandle(value = {UserEnum.Admin})
-    @PostMapping("/deleteUser")
-    public ResponseData<Object> deleteUser(String username) {
+    @GetMapping("/admin/find_user_info")
+    public ResponseData<Object> getUserInfo(String userName) {
         try {
-            loginService.deleteUser(username);
+            User user = loginService.findUserInfo(userName);
+            return ResponseData.Success(user);
+        } catch (Exception e) {
+            return ResponseData.Create(new BizException(ResponseEnum.UNEXPECTED));
+        }
+    }
+
+    @AuthHandle(value = {UserEnum.Admin})
+    @PostMapping("/admin/del_user")
+    public ResponseData<Object> deleteUser(HttpServletRequest request) {
+        try {
+            MultipartHttpServletRequest params = ((MultipartHttpServletRequest) request);
+            String userName = params.getParameter("userName");
+            loginService.deleteUser(userName);
             return ResponseData.Success("删除成功");
         } catch (Exception e) {
             return ResponseData.Create(new BizException(ResponseEnum.UNEXPECTED));

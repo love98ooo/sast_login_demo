@@ -47,7 +47,7 @@ public class AuthAspect {
             throw new BizException(ResponseEnum.USER_NOT_LOGIN);
         }
         if (!UserEnum.checkUser(user, authEnum)) {
-            log.error(user.getUsername() +
+            log.error(user.getUserName() +
                       " is trying to access to an illegal function," +
                       " but Role Limited");
             throw new BizException(ResponseEnum.USER_ROLE_LIMITED);

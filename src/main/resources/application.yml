@@ -16,6 +16,19 @@ spring:
         max-idle: 5
         min-idle: 0
     password:
+  servlet:
+    multipart:
+      enabled: true #表示是否开启文件上传支持，默认为 true
+      location: E:/  #用来指定上传文件的临时写入目录,一定要注意是绝对目录
+      #file-size-threshold表示在文件上传的过程中，如果文件大小达到阈值（以字节为单位），将会写入到临时文件路径中
+      #默认值为0，所有文件都会写入磁盘的临时文件中，可以使用后缀"MB"或"KB"分别表示兆字节或千字节。不带单位默认为字节
+      #DataSize.ofKilobytes(10)表示10KB
+      #DataSize.ofMegabytes(10)表示10MB
+      #DataSize.ofBytes(10)表示10B
+      file-size-threshold: 1KB   #默认为0，即没有限制
+      max-file-size: 20MB       #上传的单个文件的最大大小，默认为 1MB
+      max-request-size: 200MB    #多文件上传时文件的总大小，默认为 10MB
+      resolve-lazily: false    #表示文件是否延迟解析，默认为 false
 
 #mybatis会在resources的mapper目录下寻找xml文件
 mybatis:

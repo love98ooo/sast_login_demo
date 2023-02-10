@@ -15,11 +15,11 @@ public enum ResponseEnum {
     NOT_USER(1009, "NOT_USER"),
     UNEXPECTED(-1, "UNEXPECTED");
 
-    private final int status;
+    private final Integer status;
     private final String msg;
 
 
-    ResponseEnum(int status, String msg){
+    ResponseEnum(Integer status, String msg){
         this.status = status;
         this.msg = msg;
     }

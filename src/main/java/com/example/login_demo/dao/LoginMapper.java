@@ -8,10 +8,12 @@ import java.util.List;
 
 @Mapper
 public interface LoginMapper {
-    User selectPassword(@Param("username") String username);
-    Integer existUser(@Param("username") String username);
+    User selectUser(@Param("userName") String userName);
+    Integer existUser(@Param("userName") String userName);
     List<User> selectAllUser();
     void insertUser(@Param("user") User user);
-    void updatePassword(@Param("username") String username, @Param("newPassword") String newPassword);
-    void deleteUser(@Param("username") String username);
+    void updatePassword(@Param("id") int id, @Param("newPassword") String newPassword);
+    void updateUserName(@Param("id") int id, @Param("userName") String userName);
+    void updateEmail(@Param("id") int id, @Param("email") String email);
+    void deleteUser(@Param("userName") String userName);
 }

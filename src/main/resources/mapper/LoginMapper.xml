@@ -4,36 +4,46 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.login_demo.dao.LoginMapper">
-    <select id="selectPassword" resultType="com.example.login_demo.pojo.User">
-        SELECT username, password, code, role, email
+    <update id="updateUserName">
+        UPDATE users
+        SET userName = #{userName}
+        WHERE id = #{id}
+    </update>
+    <update id="updateEmail">
+        UPDATE users
+        SET email = #{email}
+        WHERE id = #{id}
+    </update>
+    <select id="selectUser" resultType="com.example.login_demo.pojo.User">
+        SELECT id, userName, password, code, role, email
         FROM users
-        WHERE username = #{username}
+        WHERE userName = #{userName}
     </select>
 
     <insert id="insertUser" parameterType="com.example.login_demo.pojo.User">
-        INSERT INTO users (username, password, code, email, role) VALUES (#{user.username}, #{user.password}, #{user.code}, #{user.email}, #{user.role})
+        INSERT INTO users (userName, password, code, email, role) VALUES (#{user.userName}, #{user.password}, #{user.code}, #{user.email}, #{user.role})
     </insert>
 
     <select id="existUser" parameterType="String" resultType="Integer">
         SELECT count(*)
         FROM users
-        WHERE username = #{username}
+        WHERE userName = #{userName}
     </select>
 
     <select id="updatePassword" resultType="String">
         UPDATE users
         SET password = #{newPassword}
-        WHERE username = #{username}
+        WHERE id = #{id}
     </select>
 
     <select id="selectAllUser" resultType="com.example.login_demo.pojo.User">
-        SELECT username, role, email
+        SELECT userName, role, email
         FROM users
     </select>
 
     <delete id="deleteUser" parameterType="String">
         DELETE
         FROM users
-        WHERE username = #{username}
+        WHERE userName = #{userName}
     </delete>
 </mapper>
