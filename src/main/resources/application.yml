@@ -1,0 +1,26 @@
+spring:
+  datasource:
+    username: root
+    password: 123456
+    url: jdbc:mysql://localhost:3306/login_demo?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    database: 0
+    timeout: 5000
+    host: 127.0.0.1
+    port: 6379
+    lettuce:
+      pool:
+        max-active: 20
+        max-wait: -1
+        max-idle: 5
+        min-idle: 0
+    password:
+
+#mybatis会在resources的mapper目录下寻找xml文件
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+
+#端口为8081
+server:
+  port: 8081

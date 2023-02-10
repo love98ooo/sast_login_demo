@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.login_demo.dao.LoginMapper">
+    <select id="selectPassword" resultType="com.example.login_demo.pojo.User">
+        SELECT username, password, code, role, email
+        FROM users
+        WHERE username = #{username}
+    </select>
+
+    <insert id="insertUser" parameterType="com.example.login_demo.pojo.User">
+        INSERT INTO users (username, password, code, email, role) VALUES (#{user.username}, #{user.password}, #{user.code}, #{user.email}, #{user.role})
+    </insert>
+
+    <select id="existUser" parameterType="String" resultType="Integer">
+        SELECT count(*)
+        FROM users
+        WHERE username = #{username}
+    </select>
+
+    <select id="updatePassword" resultType="String">
+        UPDATE users
+        SET password = #{newPassword}
+        WHERE username = #{username}
+    </select>
+
+    <select id="selectAllUser" resultType="com.example.login_demo.pojo.User">
+        SELECT username, role, email
+        FROM users
+    </select>
+
+    <delete id="deleteUser" parameterType="String">
+        DELETE
+        FROM users
+        WHERE username = #{username}
+    </delete>
+</mapper>
