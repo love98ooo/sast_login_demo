@@ -15,13 +15,13 @@
         WHERE id = #{id}
     </update>
     <select id="selectUser" resultType="com.example.login_demo.pojo.User">
-        SELECT id, userName, password, code, role, email
+        SELECT id, userName, password, role, email
         FROM users
         WHERE userName = #{userName}
     </select>
 
     <insert id="insertUser" parameterType="com.example.login_demo.pojo.User">
-        INSERT INTO users (userName, password, code, email, role) VALUES (#{user.userName}, #{user.password}, #{user.code}, #{user.email}, #{user.role})
+        INSERT INTO users (userName, password, email, role) VALUES (#{user.userName}, #{user.password}, #{user.email}, #{user.role})
     </insert>
 
     <select id="existUser" parameterType="String" resultType="Integer">

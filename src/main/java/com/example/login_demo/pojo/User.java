@@ -13,31 +13,29 @@ public class User {
     private int id;
     private String userName;
     private String password;
-    private String role;
-    private int code;
+    private int role;
     private String email;
     private String token;
 
-    public User(String userName, String password, String role, String email, String token) {
+    public User(String userName, String password, int role, String email, String token) {
         this.userName = userName;
-        this.password = password;
         this.role = role;
+        this.password = password;
         this.email = email;
         this.token = token;
     }
 
-    public User(String userName, String password, String role, int code, String email) {
+    public User(String userName, String password, int role, String email) {
         this.userName = userName;
         this.password = password;
         this.role = role;
-        this.code = code;
         this.email = email;
     }
 
-    public User(int id, String userName, String role, String email, String token) {
+    public User(int id, String userName, int role, String email, String token) {
         this.id = id;
-        this.userName = userName;
         this.role = role;
+        this.userName = userName;
         this.email = email;
         this.token = token;
     }
@@ -48,12 +46,11 @@ public class User {
         this.email = email;
     }
 
-    public User(int id, String userName, String password, String role, int code, String email) {
+    public User(int id, String userName, String password, int role, String email) {
         this.id = id;
         this.userName = userName;
         this.password = password;
         this.role = role;
-        this.code = code;
         this.email = email;
     }
 }

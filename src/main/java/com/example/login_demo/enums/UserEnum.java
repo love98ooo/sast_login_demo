@@ -28,7 +28,7 @@ public enum UserEnum {
         for (UserEnum userEnum :
                 needRole) {
 //          判断权限是否符合要求
-            if (userEnum.getCode().equals(user.getCode())) {
+            if (userEnum.getCode().equals(user.getRole())) {
                 return true;
             }
         }

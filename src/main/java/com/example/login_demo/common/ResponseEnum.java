@@ -3,7 +3,7 @@ package com.example.login_demo.common;
 
 public enum ResponseEnum {
 
-    SUCCESS(0,"SUCCESS"),
+    SUCCESS(null,"SUCCESS"),
     ERROR(1001,"ERROR"),
     ILLEGAL_ARGUMENT(1002,"ILLEGAL_ARGUMENT"),
     USER_NOT_LOGIN(1003, "USER_NOT_LOGIN"),
@@ -24,7 +24,7 @@ public enum ResponseEnum {
         this.msg = msg;
     }
 
-    public int getStatus(){
+    public Integer getStatus(){
         return status;
     }
     public String getMsg(){

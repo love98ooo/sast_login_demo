@@ -11,10 +11,10 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.time.Duration;
 import java.util.Objects;
@@ -27,7 +27,7 @@ public class AuthAspect {
     public AuthAspect(HttpServletRequest request) {
         this.request = request;
     }
-    @Autowired
+    @Resource
     private RedisTemplate redisTemplate;
     @Pointcut("@annotation(com.example.login_demo.annotation.AuthHandle)")
     public void start() {
